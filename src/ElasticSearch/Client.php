@@ -124,7 +124,7 @@ class Client {
         if (is_array($type))
             $type = implode(",", array_filter($type));
         $this->type = $type;
-        $this->_config['type'] = $index;
+        $this->_config['type'] = $type;
         $this->transport->setType($type);
         return $this;
     }
@@ -137,7 +137,7 @@ class Client {
      * @param bool $verbose
      */
     public function get($id, $verbose=false) {
-        return $this->request($id, "GET");
+        return $this->request($id, "GET", false, $verbose);
     }
 
     /**
