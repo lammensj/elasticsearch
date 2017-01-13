@@ -110,6 +110,7 @@ class Client {
         if (is_array($index))
             $index = implode(",", array_filter($index));
         $this->index = $index;
+        $this->_config['index'] = $index;
         $this->transport->setIndex($index);
         return $this;
     }
@@ -123,6 +124,7 @@ class Client {
         if (is_array($type))
             $type = implode(",", array_filter($type));
         $this->type = $type;
+        $this->_config['type'] = $index;
         $this->transport->setType($type);
         return $this;
     }
