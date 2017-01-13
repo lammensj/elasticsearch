@@ -40,7 +40,7 @@ class HTTP extends Base {
     /**
      * Index a new document or update it if existing
      *
-     * @return array
+     * @return \stdClass
      * @param array $document
      * @param mixed $id Optional
      * @param array $options
@@ -54,7 +54,7 @@ class HTTP extends Base {
     /**
      * Update a part of a document
      *
-     * @return array
+     * @return \stdClass
      *
      * @param array $partialDocument
      * @param mixed $id
@@ -69,7 +69,7 @@ class HTTP extends Base {
     /**
      * Search
      *
-     * @return array
+     * @return \stdClass
      * @param array|string $query
      * @param array $options
      */
@@ -114,7 +114,7 @@ class HTTP extends Base {
     /**
      * Search
      *
-     * @return array
+     * @return \stdClass
      * @param mixed $query
      * @param array $options Parameters to pass to delete action
      */
@@ -139,7 +139,7 @@ class HTTP extends Base {
         if ($options['refresh']) {
             $this->request('_refresh', "POST");
         }
-        return !isset($result['error']);
+        return !isset($result->error);
     }
 
     /**
@@ -150,7 +150,7 @@ class HTTP extends Base {
      * @param string|array $path
      * @param string $method
      * @param array|bool $payload
-     * @return array
+     * @return \stdClass
      */
     public function request($path, $method="GET", $payload=false) {
         return $this->call($this->buildUrl($path), $method, $payload);
@@ -159,7 +159,7 @@ class HTTP extends Base {
     /**
      * Flush this index/type combination
      *
-     * @return array
+     * @return \stdClass
      * @param mixed $id Id of document to delete
      * @param array $options Parameters to pass to delete action
      */
@@ -173,7 +173,7 @@ class HTTP extends Base {
     /**
      * Perform a http call against an url with an optional payload
      *
-     * @return array
+     * @return \stdClass
      * @param string $url
      * @param string $method (GET/POST/PUT/DELETE)
      * @param array|bool $payload The document/instructions to pass along
@@ -197,9 +197,9 @@ class HTTP extends Base {
 
         $response = curl_exec($conn);
         if ($response !== false) {
-            $data = json_decode($response, true);
+            $data = json_decode($response);
             if (!$data) {
-                $data = array('error' => $response, "code" => curl_getinfo($conn, CURLINFO_HTTP_CODE));
+                $data = (object) array('error' => $response, "code" => curl_getinfo($conn, CURLINFO_HTTP_CODE));
             }
         }
         else {

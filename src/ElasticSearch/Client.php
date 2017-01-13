@@ -187,15 +187,15 @@ class Client {
      */
     public function request($path, $method = 'GET', $payload = false, $verbose=false) {
         $response = $this->transport->request($this->expandPath($path), $method, $payload);
-        return ($verbose || !isset($response['_source']))
+        return ($verbose || !isset($response->_source))
             ? $response
-            : $response['_source'];
+            : $response->_source;
     }
 
     /**
      * Index a new document or update it if existing
      *
-     * @return array
+     * @return \stdClass
      * @param array $document
      * @param mixed $id Optional
      * @param array $options Allow sending query parameters to control indexing further
@@ -211,7 +211,7 @@ class Client {
     /**
      * Update a part of a document
      *
-     * @return array
+     * @return \stdClass
      *
      * @param array $partialDocument
      * @param mixed $id
@@ -228,21 +228,21 @@ class Client {
     /**
      * Perform search, this is the sweet spot
      *
-     * @return array
+     * @return \stdClass
      * @param $query
      * @param array $options
      */
     public function search($query, array $options = array()) {
         $start = microtime(true);
         $result = $this->transport->search($query, $options);
-        $result['time'] = microtime(true) - $start;
+        $result->time = microtime(true) - $start;
         return $result;
     }
     
     /**
      * Flush this index/type combination
      *
-     * @return array
+     * @return \stdClass
      * @param mixed $id If id is supplied, delete that id for this index
      *                  if not wipe the entire index
      * @param array $options Parameters to pass to delete action
@@ -257,7 +257,7 @@ class Client {
     /**
      * Flush this index/type combination
      *
-     * @return array
+     * @return \stdClass
      * @param mixed $query Text or array based query to delete everything that matches
      * @param array $options Parameters to pass to delete action
      */
@@ -268,7 +268,7 @@ class Client {
     /**
      * Perform refresh of current indexes
      *
-     * @return array
+     * @return \stdClass
      */
     public function refresh() {
         return $this->transport->request(array('_refresh'), 'GET');

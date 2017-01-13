@@ -24,7 +24,7 @@ class Memcached extends Base {
     /**
      * Index a new document or update it if existing
      *
-     * @return array
+     * @return \stdClass
      * @param array $document
      * @param mixed $id Optional
      * @param array $options
@@ -37,7 +37,7 @@ class Memcached extends Base {
         $document = json_encode($document);
         $url = $this->buildUrl(array($this->type, $id));
         $response = $this->conn->set($url, $document);
-        return array(
+        return (object) array(
             'ok' => $response
         );
     }
@@ -45,7 +45,7 @@ class Memcached extends Base {
     /**
      * Update a part of a document
      *
-     * @return array
+     * @return \stdClass
      * @param  array                    $partialDocument
      * @param  mixed                    $id
      * @param  array                    $options
@@ -55,7 +55,7 @@ class Memcached extends Base {
         $url = $this->buildUrl(array($this->type, $id));
         $response = $this->conn->set($url, $document);
 
-        return array(
+        return (object) array(
             'ok' => $response,
         );
     }
@@ -63,7 +63,7 @@ class Memcached extends Base {
     /**
      * Search
      *
-     * @return array
+     * @return \stdClass
      * @param array|string $query
      * @throws \ElasticSearch\Exception
      */
@@ -75,7 +75,7 @@ class Memcached extends Base {
                 $url = $this->buildUrl(array(
                     $this->type, "_search?q=" . $q
                 ));
-                $result = json_decode($this->conn->get($url), true);
+                $result = json_decode($this->conn->get($url));
                 return $result;
             }
             throw new \ElasticSearch\Exception("Memcached protocol doesnt support the full DSL, only query");
@@ -87,7 +87,7 @@ class Memcached extends Base {
             $url = $this->buildUrl(array(
                 $this->type, "_search?q=" . $query
             ));
-            $result = json_decode($this->conn->get($url), true);
+            $result = json_decode($this->conn->get($url));
             return $result;
         }
     }
@@ -100,7 +100,7 @@ class Memcached extends Base {
      * @param string|array $path
      * @param string $method
      * @param array|bool $payload
-     * @return array
+     * @return \stdClass
      */
     public function request($path, $method="GET", $payload=false) {
         $url = $this->buildUrl($path);
@@ -118,7 +118,7 @@ class Memcached extends Base {
     /**
      * Flush this index/type combination
      *
-     * @return array
+     * @return \stdClass
      * @param mixed $id
      * @param array $options Parameters to pass to delete action
      */
